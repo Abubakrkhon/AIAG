@@ -1,0 +1,118 @@
+{
+  "research_id": "res_20261003_133916_35731b",
+  "query": "Какие молекулярные механизмы связаны с регенерацией повреждённых сенсорных клеток?",
+  "mode": "QUICK_RESEARCH",
+  "timestamp": "2026-10-03T13:39:17.366431+00:00",
+  "model_version": "RESEARCH-OS-v1.0-COMPLIANT",
+  "parameters": {
+    "query": "Какие молекулярные механизмы связаны с регенерацией повреждённых сенсорных клеток?",
+    "mode": "QUICK_RESEARCH",
+    "keywords": [
+      "Какие",
+      "регенерацией",
+      "повреждённых",
+      "сенсорных",
+      "клеток"
+    ]
+  },
+  "source_dois": [
+    "10.36627/2500-1302-2021-2-2-138-145",
+    "10.7868/s0042875216010161",
+    "10.52575/2712-746x-2024-51-1-232-240",
+    "10.36627/2619-1407-2020-4-4-316-322",
+    "10.36627/2410-9622-2020-4-4-270-278"
+  ],
+  "generated_hypotheses_ids": [
+    "hyp_01_synergistic_reprogramming",
+    "hyp_02_wnt_notch_dual_cocktail",
+    "hyp_03_erbb2_reactivation",
+    "hyp_04_p27kip1_siRNA_transdifferentiation",
+    "hyp_05_neurotrophin_synaptogenesis_coadministration"
+  ],
+  "execution_steps_log": [
+    {
+      "timestamp": "2026-10-03T13:39:16.498203+00:00",
+      "agent": "Orchestrator",
+      "action": "START_RESEARCH_SESSION",
+      "details": "Initiating QUICK_RESEARCH for query: 'Какие молекулярные механизмы связаны с регенерацией повреждённых сенсорных клеток?'"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:16.502619+00:00",
+      "agent": "Agent 1 - Planner",
+      "action": "FORMULATE_PLAN",
+      "details": "Decomposing research query into inclusion criteria and subquestions"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:16.504702+00:00",
+      "agent": "Agent 2 - Literature Miner",
+      "action": "MINE_LITERATURE",
+      "details": "Searching Europe PMC & Crossref for keywords: ['Какие', 'регенерацией', 'повреждённых', 'сенсорных', 'клеток']"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.329015+00:00",
+      "agent": "Agent 2 - Literature Miner",
+      "action": "LITERATURE_STORED",
+      "details": "Extracted 5 verified papers"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.331228+00:00",
+      "agent": "Agent 3 - Evidence Critic",
+      "action": "EVALUATE_EVIDENCE",
+      "details": "Evaluating sample size, study design, bias, and reproducibility"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.333560+00:00",
+      "agent": "Agent 4 - Contradiction Detector",
+      "action": "DETECT_CONTRADICTIONS",
+      "details": "Analyzing divergent study findings and species/dosage differences"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.335624+00:00",
+      "agent": "Agent 5 - Knowledge Graph",
+      "action": "BUILD_KNOWLEDGE_GRAPH",
+      "details": "Constructing disease -> mechanism -> target -> gene -> drug graph network"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.337763+00:00",
+      "agent": "Agent 6 - Gap Detector",
+      "action": "ISOLATE_KNOWLEDGE_GAPS",
+      "details": "Executing KNOWN -> UNKNOWN -> WHY UNKNOWN -> HOW TO TEST pipeline"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.339921+00:00",
+      "agent": "Agent 7 - Hypothesis Engine",
+      "action": "GENERATE_HYPOTHESES",
+      "details": "Generating >=5 independent testable hypotheses with falsification criteria"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.342064+00:00",
+      "agent": "Agent 8 - Experiment Designer",
+      "action": "DESIGN_EXPERIMENTS",
+      "details": "Formulating experimental protocols, controls, and statistical plans"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.344419+00:00",
+      "agent": "Agent 10 - Red Team Scientist",
+      "action": "ADVERSARIAL_CRITIQUE",
+      "details": "Subjecting hypotheses to independent adversarial critique"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.346638+00:00",
+      "agent": "Orchestrator - Self-Correction",
+      "action": "HYPOTHESIS_WEAKENED",
+      "details": "Hypothesis 'hyp_01_synergistic_reprogramming' status updated to WEAKENED following critique"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.360345+00:00",
+      "agent": "Agent 11 - Research Synthesizer",
+      "action": "SYNTHESIZE_REPORT",
+      "details": "Compiling scientific consensus, evidence summary, and research roadmap"
+    },
+    {
+      "timestamp": "2026-10-03T13:39:17.364310+00:00",
+      "agent": "Agent 12 - Reproducibility Engine",
+      "action": "CREATE_MANIFEST",
+      "details": "Generating JSON Research Manifest & provenance checksums"
+    }
+  ]
+}

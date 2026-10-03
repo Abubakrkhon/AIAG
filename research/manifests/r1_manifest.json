@@ -1,0 +1,19 @@
+{
+  "research_id": "r1",
+  "query": "q1",
+  "mode": "DEEP",
+  "timestamp": "2026-10-03T13:34:04.472917+00:00",
+  "model_version": "RESEARCH-OS-v1.0-COMPLIANT",
+  "parameters": {},
+  "source_dois": [
+    "10.1016/j.neuron.2012.11.028"
+  ],
+  "generated_hypotheses_ids": [
+    "hyp_01_synergistic_reprogramming",
+    "hyp_02_wnt_notch_dual_cocktail",
+    "hyp_03_erbb2_reactivation",
+    "hyp_04_p27kip1_siRNA_transdifferentiation",
+    "hyp_05_neurotrophin_synaptogenesis_coadministration"
+  ],
+  "execution_steps_log": []
+}
