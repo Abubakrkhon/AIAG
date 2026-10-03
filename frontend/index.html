@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESEARCH-OS | Autonomous AI Scientific Research Agent</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-microscope brand-icon"></i>
+                <div class="brand-text">
+                    <h2>RESEARCH-OS</h2>
+                    <span class="subtext">AI Scientific Laboratory</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-tab="tab-workspace"><i class="fa-solid fa-flask"></i> Research Workspace</button>
+                <button class="nav-btn" data-tab="tab-literature"><i class="fa-solid fa-book-open"></i> Literature & Sources</button>
+                <button class="nav-btn" data-tab="tab-evidence"><i class="fa-solid fa-scale-balanced"></i> Evidence Map</button>
+                <button class="nav-btn" data-tab="tab-kg"><i class="fa-solid fa-diagram-project"></i> Knowledge Graph</button>
+                <button class="nav-btn" data-tab="tab-hypotheses"><i class="fa-solid fa-lightbulb"></i> Hypotheses DB</button>
+                <button class="nav-btn" data-tab="tab-experiments"><i class="fa-solid fa-vial"></i> Experiments</button>
+                <button class="nav-btn" data-tab="tab-redteam"><i class="fa-solid fa-shield-halved"></i> Red Team Critic</button>
+                <button class="nav-btn" data-tab="tab-notebook"><i class="fa-solid fa-journal-whills"></i> Lab Notebook</button>
+                <button class="nav-btn" data-tab="tab-report"><i class="fa-solid fa-file-contract"></i> Final Scientific Report</button>
+            </nav>
+
+            <div class="safety-badge">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div class="badge-text">
+                    <strong>Medical Safety Guard</strong>
+                    <p>Research Hypothesis ≠ Preclinical Proof ≠ Medical Prescriptions</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content View -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <div class="header-status">
+                    <span class="status-indicator online"></span>
+                    <span id="session-status">System Ready</span>
+                </div>
+                <div class="header-actions">
+                    <span id="research-id-tag" class="research-tag">ID: No Active Session</span>
+                    <button id="btn-quick-demo" class="btn btn-secondary"><i class="fa-solid fa-play"></i> Run Demo Cycle</button>
+                </div>
+            </header>
+
+            <!-- Tab 1: Research Workspace -->
+            <section id="tab-workspace" class="tab-pane active">
+                <div class="card workspace-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Initiate Scientific Research</h2>
+                        <span class="badge">Multi-Agent Engine</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="research-query-input">Research Question / Scientific Inquiry:</label>
+                            <textarea id="research-query-input" rows="3" placeholder="e.g. Какие молекулярные механизмы связаны с регенерацией повреждённых сенсорных клеток?">Какие молекулярные механизмы связаны с регенерацией повреждённых сенсорных клеток?</textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col">
+                                <label for="research-mode-select">Execution Mode:</label>
+                                <select id="research-mode-select">
+                                    <option value="DEEP_RESEARCH" selected>DEEP RESEARCH (Full 12-Agent Cycle + Red Team)</option>
+                                    <option value="RESEARCH_LAB">RESEARCH LAB (Complete Cycle + Simulation + Iteration)</option>
+                                    <option value="QUICK_RESEARCH">QUICK RESEARCH (Rapid Literature & Evidence Synthesis)</option>
+                                </select>
+                            </div>
+                            <div class="form-group col flex-end">
+                                <button id="btn-run-research" class="btn btn-primary"><i class="fa-solid fa-bolt"></i> Launch Autonomous Agents</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Agent Orchestration Progress -->
+                <div id="orchestration-progress-card" class="card hidden">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-circle-notch fa-spin"></i> Agent Workflow Orchestration</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="agent-stepper">
+                            <div class="step-item" id="step-agent-1"><i class="fa-solid fa-compass"></i> Planner</div>
+                            <div class="step-item" id="step-agent-2"><i class="fa-solid fa-database"></i> Miner</div>
+                            <div class="step-item" id="step-agent-3"><i class="fa-solid fa-magnifying-glass"></i> Evidence</div>
+                            <div class="step-item" id="step-agent-4"><i class="fa-solid fa-code-compare"></i> Contradiction</div>
+                            <div class="step-item" id="step-agent-5"><i class="fa-solid fa-diagram-next"></i> Knowledge Graph</div>
+                            <div class="step-item" id="step-agent-6"><i class="fa-solid fa-question"></i> Gap Detector</div>
+                            <div class="step-item" id="step-agent-7"><i class="fa-solid fa-lightbulb"></i> Hypotheses</div>
+                            <div class="step-item" id="step-agent-8"><i class="fa-solid fa-vial"></i> Experiments</div>
+                            <div class="step-item" id="step-agent-10"><i class="fa-solid fa-shield"></i> Red Team</div>
+                            <div class="step-item" id="step-agent-11"><i class="fa-solid fa-file-check"></i> Synthesizer</div>
+                        </div>
+                        <p id="current-agent-activity" class="activity-text">Initializing agent network...</p>
+                    </div>
+                </div>
+
+                <!-- Executive Summary Quick View -->
+                <div id="workspace-summary-container" class="workspace-results hidden">
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <span class="metric-value" id="m-papers-count">0</span>
+                            <span class="metric-label">Verified Literature</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-value" id="m-contradictions-count">0</span>
+                            <span class="metric-label">Contradictions Found</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-value" id="m-hypotheses-count">0</span>
+                            <span class="metric-label">Hypotheses Generated</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-value" id="m-confidence-score">0.0</span>
+                            <span class="metric-label">Consensus Confidence</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-bullseye"></i> Research Objective & Consensus Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <p id="summary-text-content" class="lead-text"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 2: Literature -->
+            <section id="tab-literature" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-book"></i> Extracted Peer-Reviewed Literature</h2>
+                        <span id="lit-count-badge" class="badge">0 Papers</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="literature-list" class="paper-list-grid">
+                            <p class="empty-msg">No active research session. Please launch research from the Workspace.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 3: Evidence Map -->
+            <section id="tab-evidence" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-scale-balanced"></i> Evidence Quality & Bias Assessment Map</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="evidence-profiles-container" class="evidence-grid">
+                            <p class="empty-msg">No evidence profiles loaded.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 4: Knowledge Graph -->
+            <section id="tab-kg" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-diagram-project"></i> Biological Knowledge Graph</h2>
+                        <span class="badge">Disease → Target → Pathway → Outcome</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="kg-visualizer" class="kg-container">
+                            <div id="kg-nodes-list" class="kg-nodes-column"></div>
+                            <div id="kg-edges-list" class="kg-edges-column"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 5: Hypotheses DB -->
+            <section id="tab-hypotheses" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-database"></i> Hypothesis Scientific Memory Database</h2>
+                        <span class="badge">Preserves Active & Refuted Hypotheses</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="hypotheses-table-container">
+                            <table class="data-table">
+                               <thead>
+                                   <tr>
+                                       <th>ID</th>
+                                       <th>Hypothesis Title</th>
+                                       <th>Prediction</th>
+                                       <th>Falsification Criteria</th>
+                                       <th>Status</th>
+                                       <th>Score</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="hypotheses-table-body">
+                                   <tr><td colspan="6" class="text-center">No hypotheses in memory.</td></tr>
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 6: Experiments -->
+            <section id="tab-experiments" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-flask-vial"></i> Experimental Design & Computational Simulation</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="experiments-container">
+                            <p class="empty-msg">No experimental designs available.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 7: Red Team -->
+            <section id="tab-redteam" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-shield-halved"></i> Red Team Adversarial Critic Evaluation</h2>
+                        <span class="badge badge-warning">Adversarial Falsification Engine</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="redteam-critiques-container">
+                            <p class="empty-msg">No adversarial critiques generated.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 8: Lab Notebook -->
+            <section id="tab-notebook" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-journal-whills"></i> Automated Scientific Lab Notebook Audit Log</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="lab-notebook-logs" class="log-timeline">
+                            <p class="empty-msg">No log entries found.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 9: Final Report -->
+            <section id="tab-report" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-file-contract"></i> Complete Reproducible Scientific Report</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="report-rendered-view" class="report-document">
+                            <p class="empty-msg">Run a research cycle to generate the final scientific report.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
