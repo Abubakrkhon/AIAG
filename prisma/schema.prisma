@@ -1,0 +1,304 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model ActiveIngredient {
+  id                    String                   @id @default(uuid())
+  innRu                 String                   // МНН на русском (e.g., Парацетамол)
+  innEn                 String                   // INN на английском (e.g., Paracetamol)
+  latinName             String?                  // Латинское название (e.g., Paracetamolum)
+  chemicalName          String?                  // Химическое название
+  description           String?                  // Описание вещества
+  casNumber             String?                  // CAS номер
+  atcCodeId             String?
+  atcCode               ATCCode?                 @relation(fields: [atcCodeId], references: [id])
+  pharmClassId          String?
+  pharmClass            PharmacologicalClass?    @relation(fields: [pharmClassId], references: [id])
+
+  drugs                 DrugActiveIngredient[]
+  mechanisms            PharmacodynamicMechanism[]
+  kinetics              PharmacokineticParameter[]
+  interactionsAsA       DrugInteraction[]        @relation("IngredientA")
+  interactionsAsB       DrugInteraction[]        @relation("IngredientB")
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+}
+
+model PharmacologicalClass {
+  id                    String                   @id @default(uuid())
+  nameRu                String                   // Название на русском
+  nameEn                String?                  // Название на английском
+  code                  String?                  // Внутренний код или шифр
+  category              String                   // "GENERAL" (Общая) или "SPECIAL" (Частная)
+  description           String?                  // Описание группы
+  parentId              String?
+  parent                PharmacologicalClass?    @relation("ClassHierarchy", fields: [parentId], references: [id])
+  children              PharmacologicalClass[]   @relation("ClassHierarchy")
+
+  ingredients           ActiveIngredient[]
+  drugs                 Drug[]
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+}
+
+model ATCCode {
+  id                    String                   @id @default(uuid())
+  code                  String                   @unique // e.g., N02BE01
+  nameRu                String                   // Название классификационной группы на русском
+  nameEn                String?
+  level                 Int                      // Уровень 1-5
+  parentId              String?
+  parent                ATCCode?                 @relation("ATCHierarchy", fields: [parentId], references: [id])
+  children              ATCCode[]                @relation("ATCHierarchy")
+
+  ingredients           ActiveIngredient[]
+  drugs                 Drug[]
+}
+
+model Drug {
+  id                    String                   @id @default(uuid())
+  tradeNameRu           String                   // Торговое наименование на русском (e.g., Панадол)
+  tradeNameEn           String?                  // Trade name in EN
+  synonyms              String?                  // Синонимы через запятую
+  pharmClassId          String?
+  pharmClass            PharmacologicalClass?    @relation(fields: [pharmClassId], references: [id])
+  atcCodeId             String?
+  atcCode               ATCCode?                 @relation(fields: [atcCodeId], references: [id])
+  manufacturerId        String?
+  manufacturer          Manufacturer?            @relation(fields: [manufacturerId], references: [id])
+
+  form                  String                   // Лекарственная форма (таблетки, раствор, etc)
+  dosageStrength        String                   // Дозировка / концентрация (e.g., 500 мг)
+  packaging             String?                  // Упаковка
+  registrationStatus    String                   @default("Зарегистрировано") // Статус регистрации
+  isPrescription        Boolean                  @default(false)
+  lastVerifiedAt        DateTime                 @default(now())
+
+  // Full instruction sections
+  compositionExcipients String?                  // Вспомогательные вещества, аллергены, лактоза
+
+  ingredients           DrugActiveIngredient[]
+  indications           Indication[]
+  contraindications     Contraindication[]
+  adverseReactions      AdverseReaction[]
+  dosages               DosageRegimen[]
+  warnings              ClinicalWarning[]
+  images                DrugImage[]
+  registrations         Registration[]
+  sources               Source[]
+  favorites             Favorite[]
+
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+}
+
+model DrugActiveIngredient {
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  ingredientId          String
+  ingredient            ActiveIngredient         @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  amount                String?                  // e.g. "500 мг"
+
+  @@id([drugId, ingredientId])
+}
+
+model Manufacturer {
+  id                    String                   @id @default(uuid())
+  name                  String
+  country               String?
+  website               String?
+  drugs                 Drug[]
+}
+
+model PharmacodynamicMechanism {
+  id                    String                   @id @default(uuid())
+  ingredientId          String
+  ingredient            ActiveIngredient         @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  target                String                   // Молекулярная мишень (e.g., ЦОГ-1, ЦОГ-2, β1-адренорецепторы)
+  targetType            String                   // "RECEPTOR", "ENZYME", "ION_CHANNEL", "TRANSPORTER"
+  interactionType        String                   // "INHIBITOR", "AGONIST", "ANTAGONIST", "PARTIAL_AGONIST"
+  molecularMechanism    String                   // Молекулярный механизм (причинно-следственный)
+  cellularEffect        String                   // Влияние на клетки и ткани
+  physiologicalEffect   String                   // Физиологический и клинический эффект
+  causalChain           String                   // JSON / текст цепочки: Мишень -> Сигнал -> Клетка -> Эффект
+}
+
+model PharmacokineticParameter {
+  id                    String                   @id @default(uuid())
+  ingredientId          String
+  ingredient            ActiveIngredient         @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  bioavailability       String?                  // Биодоступность (e.g., 70-90%)
+  tMax                  String?                  // Tmax
+  cMax                  String?                  // Cmax
+  proteinBinding        String?                  // Связывание с белками плазмы
+  volumeOfDistribution  String?                  // Объём распределения
+  bbbPenetration        String?                  // Проникновение через ГЭБ
+  placentalPenetration  String?                  // Проникновение через плаценту / в молоко
+  metabolism            String?                  // Метаболизм (ферменты CYP450)
+  activeMetabolites     String?                  // Активные метаболиты
+  halfLife              String?                  // Period T1/2
+  clearance             String?                  // Клиренс
+  excretion             String?                  // Пути выведения (почки, кишечник)
+  renalHepaticAdjust    String?                  // Коррекция при почечной/печёночной недостаточности
+}
+
+model Indication {
+  id                    String                   @id @default(uuid())
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  title                 String                   // Показание
+  description           String?
+  isOffLabel            Boolean                  @default(false)
+}
+
+model Contraindication {
+  id                    String                   @id @default(uuid())
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  title                 String
+  type                  String                   // "ABSOLUTE" или "RELATIVE"
+  description           String?
+  appliesToPregnancy    Boolean                  @default(false)
+  appliesToLactation    Boolean                  @default(false)
+  appliesToPediatric    Boolean                  @default(false)
+}
+
+model AdverseReaction {
+  id                    String                   @id @default(uuid())
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  systemOrganClass      String                   // По органам и системам (e.g., ЖКТ, Нервная система)
+  reaction              String                   // Название побочной реакции
+  frequency             String                   // "VERY_COMMON", "COMMON", "UNCOMMON", "RARE", "UNKNOWN"
+  frequencyDescription  String?                  // e.g. ">10%", "1-10%"
+  severity              String?                  // "MILD", "MODERATE", "SEVERE"
+}
+
+model DosageRegimen {
+  id                    String                   @id @default(uuid())
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  indicationContext     String?                  // При каком показании
+  patientGroup          String                   // "ADULT", "PEDIATRIC", "ELDERLY", "RENAL_IMPAIRED"
+  route                 String                   // "ORAL", "IV", "IM", "TOPICAL"
+  dose                  String                   // Стандартная доза
+  maxDailyDose          String?                  // Максимальная суточная доза
+  instructions          String?                  // Особенности приема (до/после еды, запивать водой)
+}
+
+model DrugInteraction {
+  id                    String                   @id @default(uuid())
+  ingredientAId         String
+  ingredientA           ActiveIngredient         @relation("IngredientA", fields: [ingredientAId], references: [id], onDelete: Cascade)
+  ingredientBId         String
+  ingredientB           ActiveIngredient         @relation("IngredientB", fields: [ingredientBId], references: [id], onDelete: Cascade)
+  severity              String                   // "HIGH", "MODERATE", "LOW", "CONTRAINDICATED"
+  mechanism             String                   // Фармакодинамический или фармакокинетический механизм
+  clinicalConsequence   String                   // Клиническое последствие
+  recommendation        String                   // Рекомендации по предосторожности
+}
+
+model ClinicalWarning {
+  id                    String                   @id @default(uuid())
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  level                 String                   // "BLACK_BOX", "WARNING", "PRECAUTION"
+  title                 String
+  content               String
+}
+
+model DrugImage {
+  id                    String                   @id @default(uuid())
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  url                   String
+  caption               String?
+  imageType             String                   // "PACKAGING", "BLISTER", "DOSAGE_FORM", "SCHEMA"
+  isVerified            Boolean                  @default(true)
+}
+
+model Registration {
+  id                    String                   @id @default(uuid())
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  regNumber             String                   // Регистрационный номер (e.g. П N014023/01)
+  country               String                   // Страна регистрации (e.g. РФ)
+  issueDate             String?
+  status                String                   // "ACTIVE", "EXPIRED", "WITHDRAWN"
+}
+
+model Source {
+  id                    String                   @id @default(uuid())
+  drugId                String?
+  drug                  Drug?                    @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  title                 String                   // Название источника
+  publisher             String?                  // Издатель / Орган (e.g., ГРЛС, WHO, FDA, EMA)
+  url                   String?                  // Ссылка
+  publicationDate       String?                  // Дата публикации
+  verificationDate      DateTime                 @default(now())
+  jurisdiction          String?                  // Юрисдикция (РФ, США, ВОЗ)
+  sourceType            String                   // "OFFICIAL_INSTRUCTION", "REGISTER", "RESEARCH", "GUIDELINE"
+}
+
+model StudyMaterial {
+  id                    String                   @id @default(uuid())
+  topic                 String                   // Тема (e.g., НПВС, Бета-блокаторы)
+  category              String                   // "GENERAL_PHARMACOLOGY", "SPECIAL_PHARMACOLOGY"
+  briefText             String                   // Краткое объяснение (для быстрого повторения)
+  standardText          String                   // Стандартное объяснение
+  detailedText          String                   // Подробное объяснение
+  advancedText          String                   // Углублённое объяснение
+  keyTakeways           String?                  // Запоминание ключевых моментов (JSON)
+  quizzes               Quiz[]
+  createdAt             DateTime                 @default(now())
+}
+
+model Quiz {
+  id                    String                   @id @default(uuid())
+  studyMaterialId       String?
+  studyMaterial         StudyMaterial?           @relation(fields: [studyMaterialId], references: [id], onDelete: Cascade)
+  question              String
+  optionsJson           String                   // Массив вариантов ответа в формате JSON
+  correctOptionIndex    Int                      // Индекс правильного ответа
+  explanation           String                   // Пояснение ответа
+}
+
+model User {
+  id                    String                   @id @default(uuid())
+  email                 String                   @unique
+  name                  String?
+  role                  String                   @default("USER") // "USER", "EDITOR", "ADMIN"
+  favorites             Favorite[]
+  reviewHistory         ReviewHistory[]
+  createdAt             DateTime                 @default(now())
+}
+
+model Favorite {
+  id                    String                   @id @default(uuid())
+  userId                String
+  user                  User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  drugId                String
+  drug                  Drug                     @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  createdAt             DateTime                 @default(now())
+
+  @@unique([userId, drugId])
+}
+
+model ReviewHistory {
+  id                    String                   @id @default(uuid())
+  userId                String
+  user                  User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entityType            String                   // "DRUG", "INGREDIENT", "SOURCE"
+  entityId              String
+  action                String                   // "CREATED", "UPDATED", "VERIFIED", "APPROVED"
+  comment               String?
+  timestamp             DateTime                 @default(now())
+}
